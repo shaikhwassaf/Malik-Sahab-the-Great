@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>Malik Sahab Tycoon - Urban Developer</title>
@@ -109,11 +110,11 @@
     <div id="bidder-controls"></div>
     <button onclick="closeAuction()" style="background:gray; margin-top:10px;">Finalize Sale</button>
 </div>
-
-<script>
-// Logic core from MTG 2.html[cite: 3]
+ <script>
+const socket = io("https://f2d40cc7-c4c8-4d4a-907c-64b46e2e3648-00-1vds591cwvmau.pike.replit.dev");
 const Game = {
-    currentPlayer: 0,
+currentPlayer: 0,
+
     waiting: false,
     selectedPropIndex: null,
     auction: { active: false, prop: null, highBid: 0, winner: null },
