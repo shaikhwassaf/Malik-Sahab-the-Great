@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Malik Sahab the Great",
+  "version": "1.0",
+  "description": "Multiplayer board game by Shaikh Mohammad",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "icon.png"
+  },
+  "permissions": []
+}
