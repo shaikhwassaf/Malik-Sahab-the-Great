@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malik Sahab The Great — Official Rule Book</title>
+<style>
+  :root {
+    --gold: #ffd700;
+    --green-dark: #1b5e20;
+    --green-mid: #2e7d32;
+    --green-light: #43a047;
+    --cream: #fdf5e6;
+    --maroon: #4a0404;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #061a06;
+    color: #e8f5e9;
+    font-family: 'Georgia', serif;
+    line-height: 1.7;
+  }
+
+  /* ── COVER PAGE ── */
+  .cover {
+    position: relative;
+    width: 100%;
+    max-height: 520px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .cover img {
+    width: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    filter: brightness(0.82);
+  }
+  .cover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.15) 0%,
+      rgba(0,0,0,0.0) 35%,
+      rgba(6,26,6,0.85) 85%,
+      rgba(6,26,6,1) 100%
+    );
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 32px;
+    text-align: center;
+  }
+  .cover-title {
+    font-size: clamp(28px, 5vw, 52px);
+    color: var(--gold);
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.9), 0 0 40px rgba(255,215,0,0.4);
+    line-height: 1.1;
+  }
+  .cover-sub {
+    font-size: clamp(13px, 2vw, 20px);
+    color: #c8e6c9;
+    letter-spacing: 6px;
+    margin: 6px 0 4px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+  }
+  .cover-tagline {
+    font-size: clamp(15px, 2.5vw, 26px);
+    color: var(--gold);
+    font-style: italic;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.95);
+    margin-top: 2px;
+  }
+  .cover-edition {
+    margin-top: 10px;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: #a5d6a7;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+  }
+
+  /* ── CONTENT ── */
+  .rulebook {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .toc {
+    background: rgba(27,94,32,0.25);
+    border: 1px solid var(--green-mid);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 48px;
+  }
+  .toc h2 {
+    color: var(--gold);
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .toc ol {
+    columns: 2;
+    column-gap: 32px;
+    padding-left: 20px;
+  }
+  .toc li {
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  .toc a {
+    color: #a5d6a7;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .toc a:hover { color: var(--gold); }
+
+  .section {
+    margin-bottom: 48px;
+    scroll-margin-top: 20px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid var(--green-mid);
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+  }
+  .section-num {
+    background: var(--gold);
+    color: #000;
+    font-weight: bold;
+    font-size: 13px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  .section-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  p { margin-bottom: 12px; color: #c8e6c9; font-size: 15px; }
+
+  .rule-box {
+    background: rgba(13,46,13,0.6);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: #e8f5e9;
+  }
+  .rule-box strong { color: var(--gold); }
+
+  .tip-box {
+    background: rgba(74,4,4,0.3);
+    border: 1px solid #7f0000;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 13px;
+    color: #ffcdd2;
+  }
+  .tip-box::before { content: "⚠️ NOTE: "; font-weight: bold; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 16px 0;
+  }
+  @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } .toc ol { columns: 1; } }
+
+  .card {
+    background: rgba(27,94,32,0.2);
+    border: 1px solid var(--green-mid);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #c8e6c9;
+  }
+  .card h4 { color: var(--gold); margin-bottom: 6px; font-size: 14px; }
+
+  .space-type {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    margin: 6px 0;
+    font-size: 13px;
+    color: #e8f5e9;
+  }
+  .space-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 2px;
+  }
+  .badge-gold { background: var(--gold); color: #000; }
+  .badge-red  { background: #c62828; color: #fff; }
+  .badge-green{ background: var(--green-mid); color: #fff; }
+  .badge-blue { background: #1565c0; color: #fff; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  th {
+    background: var(--green-dark);
+    color: var(--gold);
+    padding: 8px 12px;
+    text-align: left;
+    letter-spacing: 0.5px;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #1b3a1b;
+    color: #c8e6c9;
+  }
+  tr:nth-child(even) td { background: rgba(27,94,32,0.15); }
+
+  .back-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--green-dark);
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    transition: background 0.2s;
+    z-index: 100;
+  }
+  .back-btn:hover { background: var(--green-mid); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #1b5e20;
+    margin: 36px 0;
+  }
+  .color-swatch {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-right: 4px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     COVER PAGE
+════════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <img src="mtg-cover.png" alt="Malik Sahab The Great — Official Cover">
+  <div class="cover-overlay">
+    <div class="cover-title">MALIK SAHAB THE GREAT</div>
+    <div class="cover-sub">— URBAN DEVELOPER —</div>
+    <div class="cover-tagline">Test Your Business Acumen</div>
+    <div class="cover-edition">📖 OFFICIAL RULE BOOK &nbsp;·&nbsp; LAHORE EDITION</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     RULEBOOK CONTENT
+════════════════════════════════════════════════════════════ -->
+<div class="rulebook">
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <h2>📜 TABLE OF CONTENTS</h2>
+    <ol>
+      <li><a href="#s1">Objective of the Game</a></li>
+      <li><a href="#s2">The Board</a></li>
+      <li><a href="#s3">Setup &amp; Starting</a></li>
+      <li><a href="#s4">Taking Your Turn</a></li>
+      <li><a href="#s5">Buying Properties</a></li>
+      <li><a href="#s6">Rent &amp; Payments</a></li>
+      <li><a href="#s7">Auctions</a></li>
+      <li><a href="#s8">Building Hotels &amp; Landmarks</a></li>
+      <li><a href="#s9">Colour Sets</a></li>
+      <li><a href="#s10">Mortgaging</a></li>
+      <li><a href="#s11">Trading</a></li>
+      <li><a href="#s12">Special Spaces</a></li>
+      <li><a href="#s13">Adda Jail</a></li>
+      <li><a href="#s14">Debt &amp; Bankruptcy</a></li>
+      <li><a href="#s15">Online Multiplayer</a></li>
+      <li><a href="#s16">Champions Lounge</a></li>
+    </ol>
+  </div>
+
+  <!-- ── SECTION 1 ── -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">1</span>
+      <span class="section-icon">🏆</span>
+      <span class="section-title">Objective of the Game</span>
+    </div>
+    <p>Become Lahore's supreme <strong style="color:var(--gold)">Urban Developer</strong> by accumulating the greatest wealth through strategic property investment, rent collection, hotel construction, and landmark development.</p>
+    <p>The last player standing after all others go bankrupt wins — or, if the group agrees to end early, the player with the highest net worth (cash + property values) is declared champion and earns a place in the <strong style="color:var(--gold)">Champions Lounge</strong>.</p>
+    <div class="rule-box">
+      <strong>Net Worth</strong> = Cash on hand + sum of all owned property prices + building values
+    </div>
+  </div>
+
+  <!-- ── SECTION 2 ── -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">2</span>
+      <span class="section-icon">🗺️</span>
+      <span class="section-title">The Board</span>
+    </div>
+    <p>The board is a loop of <strong style="color:var(--gold)">40 spaces</strong> set across iconic Lahore locations. Players move clockwise around the board on every turn.</p>
+    <div class="grid-2">
+      <div>
+        <div class="space-type"><div class="space-dot" style="background:#2e7d32"></div><strong>Properties</strong> — buyable real estate in colour groups</div>
+        <div class="space-type"><div class="space-dot" style="background:#ff9800"></div><strong>Orange Line Stations</strong> — transit hubs; rent scales with ownership</div>
+        <div class="space-type"><div class="space-dot" style="background:#ffd700"></div><strong>Thokar Ada / Go</strong> — collect Rs. 200 salary each pass</div>
+        <div class="space-type"><div class="space-dot" style="background:#c62828"></div><strong>Adda Jail</strong> — visiting or serving time</div>
+      </div>
+      <div>
+        <div class="space-type"><div class="space-dot" style="background:#1565c0"></div><strong>Chance</strong> — draw a Chance card; follow its instruction</div>
+        <div class="space-type"><div class="space-dot" style="background:#6a1b9a"></div><strong>Community</strong> — draw a Community card</div>
+        <div class="space-type"><div class="space-dot" style="background:#37474f"></div><strong>Tax</strong> — pay Income Tax or Luxury Tax to the Exchequer</div>
+        <div class="space-type"><div class="space-dot" style="background:#004d40"></div><strong>Suthra Punjab</strong> — collect all accumulated Exchequer funds</div>
+      </div>
+    </div>
+    <div class="rule-box"><strong>Suthra Punjab Exchequer:</strong> All fines, taxes, and penalties are pooled here. The first player to land on the Suthra Punjab space collects the entire pot.</div>
+  </div>
+
+  <!-- ── SECTION 3 ── -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">3</span>
+      <span class="section-icon">🎮</span>
+      <span class="section-title">Setup &amp; Starting</span>
+    </div>
+    <p>Each player selects a <strong style="color:var(--gold)">token</strong> (🐎 Tonga, 🛺 Rickshaw, 🏍️ Qingchi, 🚌 Bedford, 🚐 Ford) and receives a starting balance of <strong style="color:var(--gold)">Rs. 1,500</strong>.</p>
+    <div class="rule-box">
+      <strong>Starting Cash:</strong><br>
+      2× Rs. 500 &nbsp;|&nbsp; 2× Rs. 100 &nbsp;|&nbsp; 2× Rs. 50 &nbsp;|&nbsp; 6× Rs. 20 &nbsp;|&nbsp; 5× Rs. 10 &nbsp;|&nbsp; 5× Rs. 5 &nbsp;|&nbsp; 5× Rs. 1
+    </div>
+    <p>All players begin at <strong style="color:var(--gold)">Thokar Ada (Go)</strong>. The host rolls first; turns proceed clockwise. In online mode, the room host acts as the <em>game master</em> whose browser drives all logic.</p>
+    <div class="tip-box">In online multiplayer, only the host can start the game. All players must join using the room code before the host clicks Start.</div>
+  </div>
+
+  <!-- ── SECTION 4 ── -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">4</span>
+      <span class="section-icon">🎲</span>
+      <span class="section-title">Taking Your Turn</span>
+    </div>
+    <p>On your turn, click <strong style="color:var(--gold)">ROLL DICE</strong>. Two dice are rolled and your token advances the combined number of spaces.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4>🎲 Doubles</h4>
+        Roll two matching numbers and take an extra turn immediately. Roll doubles three times in a row and you are sent straight to <strong>Adda Jail</strong>.
+      </div>
+      <div class="card">
+        <h4>💰 Passing Go</h4>
+        Every time your token passes or lands on <strong>Thokar Ada</strong>, collect <strong>Rs. 200</strong> salary from the bank automatically.
+      </div>
+    </div>
+    <p>After moving, any action required by the space (buy, pay rent, draw card) is resolved before the next player's turn begins.</p>
+  </div>
+
+  <!-- ── SECTION 5 ── -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">5</span>
+      <span class="section-icon">🏘️</span>
+      <span class="section-title">Buying Properties</span>
+    </div>
+    <p>When you land on an unowned property, you may <span class="badge badge-green">Buy Asset</span> at the listed price, or send it to <span class="badge badge-gold">Auction</span>. If you choose to buy, the property card is immediately assigned to you.</p>
+    <div class="rule-box">
+      <strong>Deed History:</strong> Every property keeps a full ownership record — who bought it, at what price, and in which round. View it by clicking the property tile on the board.
+    </div>
+    <p>You <strong>cannot</strong> buy a property that is already owned by another player unless you negotiate a <strong style="color:var(--gold)">Trade</strong>.</p>
+  </div>
+
+  <!-- ── SECTION 6 ── -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">6</span>
+      <span class="section-icon">💸</span>
+      <span class="section-title">Rent &amp; Payments</span>
+    </div>
+    <p>Landing on another player's property triggers automatic rent payment. Rent amounts are printed on each property's card and increase with development.</p>
+    <table>
+      <tr><th>Condition</th><th>Rent</th></tr>
+      <tr><td>Unimproved property</td><td>Base rent on card</td></tr>
+      <tr><td>Owner holds full colour set (monopoly)</td><td>2× base rent</td></tr>
+      <tr><td>Hotel built</td><td>Hotel rent on card</td></tr>
+      <tr><td>Landmark built</td><td>Landmark rent on card</td></tr>
+      <tr><td>Property mortgaged</td><td>No rent collected</td></tr>
+    </table>
+    <div class="grid-2">
+      <div class="card">
+        <h4>🚂 Orange Line Stations</h4>
+        Rent doubles for each additional station owned by the same player:<br>
+        1 station → Rs. 25 &nbsp;|&nbsp; 2 → Rs. 50<br>
+        3 → Rs. 100 &nbsp;|&nbsp; 4 → Rs. 200
+      </div>
+      <div class="card">
+        <h4>🏛️ Suthra Punjab Exchequer</h4>
+        Taxes, fines, and certain card penalties are paid <em>to the Exchequer</em>, not the bank. Landing on Suthra Punjab collects the full pot.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 7 ── -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <span class="section-num">7</span>
+      <span class="section-icon">🔨</span>
+      <span class="section-title">Auctions</span>
+    </div>
+    <p>Any unowned property can be put to auction — either by declining to buy it, or through certain Chance/Community cards. Auctions are open to all active players.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4>🏛️ Urban Auction (30 sec)</h4>
+        Minimum bid = listed property price. Each player may submit one bid from their own screen. Timer counts down; highest valid bid wins.
+      </div>
+      <div class="card">
+        <h4>🏛️ Govt Auction (60 sec)</h4>
+        If no bids are placed in the Urban Auction, a Govt Auction begins. Minimum bid = 50% of the listed price. If still no bids, the property remains unowned.
+      </div>
+    </div>
+    <div class="rule-box">
+      <strong>Online mode:</strong> All players see the live high bid and bidder update in real time on their screens. Each player can only bid for themselves — your bid controls are active only on your device.
+    </div>
+    <div class="tip-box">You cannot bid more cash than you currently hold. Overbidding is automatically rejected.</div>
+  </div>
+
+  <!-- ── SECTION 8 ── -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <span class="section-num">8</span>
+      <span class="section-icon">🏗️</span>
+      <span class="section-title">Building Hotels &amp; Landmarks</span>
+    </div>
+    <p>Once you own a complete colour set (monopoly), you can develop your properties. Click a property tile on the board to open the <strong style="color:var(--gold)">Manage Asset</strong> panel.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4>🏨 Hotel</h4>
+        First upgrade on any property in your colour set. Significantly increases rent. Cost varies by property tier.
+      </div>
+      <div class="card">
+        <h4>🏙️ Landmark</h4>
+        Second and final upgrade — only available after a Hotel. Triples base rent. The most powerful development on the board.
+      </div>
+    </div>
+    <div class="rule-box">
+      <strong>Building Rule:</strong> You must build evenly across your colour set. You cannot build a Hotel on one property while another in the same set has no Hotel.
+    </div>
+    <div class="tip-box">You can sell Hotels and Landmarks back to the bank at half price if you need emergency cash.</div>
+  </div>
+
+  <!-- ── SECTION 9 ── -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <span class="section-num">9</span>
+      <span class="section-icon">🎨</span>
+      <span class="section-title">Colour Sets (Monopolies)</span>
+    </div>
+    <p>Properties are grouped into colour sets. Own all properties of the same colour to achieve a <strong style="color:var(--gold)">monopoly</strong> — this doubles all base rent on those properties and unlocks building.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4>Colour Groups</h4>
+        <div><span class="color-swatch" style="background:#8B4513"></span>Brown (2) — cheapest</div>
+        <div><span class="color-swatch" style="background:#87CEEB"></span>Light Blue (3)</div>
+        <div><span class="color-swatch" style="background:#FF69B4"></span>Pink (3)</div>
+        <div><span class="color-swatch" style="background:#FF8C00"></span>Orange (3)</div>
+      </div>
+      <div class="card">
+        <h4>&nbsp;</h4>
+        <div><span class="color-swatch" style="background:#DC143C"></span>Red (3)</div>
+        <div><span class="color-swatch" style="background:#FFD700"></span>Yellow (3)</div>
+        <div><span class="color-swatch" style="background:#228B22"></span>Green (3)</div>
+        <div><span class="color-swatch" style="background:#00008B"></span>Dark Blue (2) — most expensive</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 10 ── -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <span class="section-icon">🏦</span>
+      <span class="section-title">Mortgaging</span>
+    </div>
+    <p>If you need emergency cash, you can mortgage owned properties. A mortgaged property earns <strong style="color:var(--gold)">no rent</strong> but gives you cash equal to half its listed price.</p>
+    <div class="rule-box">
+      <strong>To mortgage:</strong> Open the Manage Asset panel by clicking the property tile → tap Mortgage. The property is greyed out on the board.<br><br>
+      <strong>To unmortgage:</strong> Pay back the mortgage value plus 10% interest to lift the mortgage and resume collecting rent.
+    </div>
+    <div class="tip-box">You must demolish all Hotels and Landmarks on a colour set before mortgaging any property in that set.</div>
+  </div>
+
+  <!-- ── SECTION 11 ── -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <span class="section-icon">🤝</span>
+      <span class="section-title">Trading</span>
+    </div>
+    <p>Players may trade properties and cash with each other at any time during their turn using the <strong style="color:var(--gold)">🤝 Propose Trade</strong> button.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4>How to Trade</h4>
+        1. Click Propose Trade<br>
+        2. Select the player to trade with<br>
+        3. Choose properties and/or cash to offer and request<br>
+        4. Click Send Offer
+      </div>
+      <div class="card">
+        <h4>Receiving a Trade</h4>
+        The recipient sees an Incoming Trade screen with the full offer details. They can Accept ✅ or Decline ❌.<br>Both players' game states update instantly.
+      </div>
+    </div>
+    <div class="rule-box">
+      <strong>Online mode:</strong> The proposer sees a "Waiting for response" screen and can retract their offer at any time using the ↩️ Retract button. Only one trade executes per offer.
+    </div>
+    <div class="tip-box">Mortgaged properties can be traded, but the new owner inherits the mortgage and must pay 10% interest to unmortgage them.</div>
+  </div>
+
+  <!-- ── SECTION 12 ── -->
+  <div class="section" id="s12">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <span class="section-icon">🃏</span>
+      <span class="section-title">Special Spaces</span>
+    </div>
+    <table>
+      <tr><th>Space</th><th>What Happens</th></tr>
+      <tr><td>🟡 Thokar Ada (Go)</td><td>Collect Rs. 200 salary when passing or landing</td></tr>
+      <tr><td>🔵 Chance</td><td>Draw a Chance card — advance, pay, collect, or go to jail</td></tr>
+      <tr><td>🟣 Community Chest</td><td>Draw a Community card — often cash rewards or penalties</td></tr>
+      <tr><td>💰 Income Tax</td><td>Pay Rs. 200 to the Suthra Punjab Exchequer</td></tr>
+      <tr><td>💎 Luxury Tax</td><td>Pay Rs. 75 to the Suthra Punjab Exchequer</td></tr>
+      <tr><td>🏛️ Suthra Punjab</td><td>Collect the full Exchequer pot (all accumulated fines &amp; taxes)</td></tr>
+      <tr><td>🚔 Go to Adda Jail</td><td>Move directly to Jail; do not pass Go; do not collect Rs. 200</td></tr>
+      <tr><td>🚂 Orange Line Stn.</td><td>Pay rent to owner based on number of stations they own</td></tr>
+      <tr><td>🅿️ Free Parking</td><td>Safe rest — no action required</td></tr>
+      <tr><td>🏛️ Just Visiting</td><td>Passing through Jail — no penalty</td></tr>
+    </table>
+  </div>
+
+  <!-- ── SECTION 13 ── -->
+  <div class="section" id="s13">
+    <div class="section-header">
+      <span class="section-num">13</span>
+      <span class="section-icon">🚔</span>
+      <span class="section-title">Adda Jail</span>
+    </div>
+    <p>You are sent to <strong style="color:var(--gold)">Adda Jail</strong> when you:</p>
+    <ul style="padding-left:20px; color:#c8e6c9; margin-bottom:12px;">
+      <li style="margin-bottom:6px;">Land on the "Go to Jail" corner space</li>
+      <li style="margin-bottom:6px;">Draw a Chance or Community card that sends you to Jail</li>
+      <li style="margin-bottom:6px;">Roll doubles three times in the same turn</li>
+    </ul>
+    <div class="grid-2">
+      <div class="card">
+        <h4>Escaping Jail</h4>
+        You <em>must</em> stay in Jail until one of these conditions is met:<br><br>
+        • Roll <strong>doubles</strong> on your turn<br>
+        • All other active players have passed Go at least once since you were jailed
+      </div>
+      <div class="card">
+        <h4>While in Jail</h4>
+        You still collect rent from your properties normally while incarcerated. You roll the dice each turn trying for doubles — but you do not move until you escape.
+      </div>
+    </div>
+    <div class="tip-box">Unlike classic Monopoly, there is no Rs. 50 bail option. You must roll doubles or wait for all other players to pass Go.</div>
+  </div>
+
+  <!-- ── SECTION 14 ── -->
+  <div class="section" id="s14">
+    <div class="section-header">
+      <span class="section-num">14</span>
+      <span class="section-icon">💸</span>
+      <span class="section-title">Debt &amp; Bankruptcy</span>
+    </div>
+    <p>When you cannot afford a payment, the <strong style="color:var(--gold)">Debt Collector</strong> panel opens. You have several options before declaring bankruptcy:</p>
+    <div class="rule-box">
+      <strong>Step 1 — Mortgage:</strong> Mortgage your properties one by one to raise cash.<br><br>
+      <strong>Step 2 — Pay:</strong> Once you have enough, tap Pay Now to clear the debt.<br><br>
+      <strong>Step 3 — Trade:</strong> Propose a trade to the creditor to settle the debt with properties.<br><br>
+      <strong>Step 4 — Bankruptcy:</strong> If all options are exhausted, declare bankruptcy. All your cash and properties return to the bank.
+    </div>
+    <div class="tip-box">Declaring bankruptcy eliminates you from the game. The creditor does not inherit your properties — they return to the bank for others to purchase.</div>
+
+    <p style="margin-top:16px;"><strong style="color:var(--gold)">Government Nationalisation</strong> (Online mode only)</p>
+    <p>If a player disconnects and does not rejoin within <strong style="color:var(--gold)">5 minutes</strong>, the government seizes their assets: all cash is transferred to the Exchequer and all properties return to the bank.</p>
+  </div>
+
+  <!-- ── SECTION 15 ── -->
+  <div class="section" id="s15">
+    <div class="section-header">
+      <span class="section-num">15</span>
+      <span class="section-icon">🌐</span>
+      <span class="section-title">Online Multiplayer</span>
+    </div>
+    <p>Play with 2–5 players on separate devices, anywhere in the world, using a shared <strong style="color:var(--gold)">Room Code</strong>.</p>
+    <table>
+      <tr><th>Feature</th><th>How it Works</th></tr>
+      <tr><td>Create Room</td><td>Host creates a room and shares the 5-character code</td></tr>
+      <tr><td>Join Room</td><td>Each player enters the code and picks their name &amp; token</td></tr>
+      <tr><td>Game Sync</td><td>Host's browser drives all logic; state is synced to all devices in real time</td></tr>
+      <tr><td>Voice Chat</td><td>Built-in WebRTC voice — click 🎙️ Join Voice in the sidebar</td></tr>
+      <tr><td>Text Chat</td><td>In-game chat visible to all players in the sidebar</td></tr>
+      <tr><td>Disconnect</td><td>Auto-roll takes over after 90 seconds; 5-minute window to rejoin</td></tr>
+      <tr><td>Rejoin</td><td>Open the game → a Rejoin panel appears automatically with your details pre-filled</td></tr>
+    </table>
+    <div class="rule-box">
+      <strong>Auto-Roll:</strong> If a player loses connection during their turn, the game automatically rolls dice and plays their turn after 90 seconds, so the game never gets stuck.
+    </div>
+  </div>
+
+  <!-- ── SECTION 16 ── -->
+  <div class="section" id="s16">
+    <div class="section-header">
+      <span class="section-num">16</span>
+      <span class="section-icon">🏛️</span>
+      <span class="section-title">Champions Lounge</span>
+    </div>
+    <p>Every game winner is recorded in the <strong style="color:var(--gold)">Champions Lounge</strong> — a monthly server-side leaderboard tracking the city's top property tycoons.</p>
+    <div class="rule-box">
+      <strong>Monthly Reset:</strong> The leaderboard resets each month, giving every player a fresh chance at the crown.<br><br>
+      <strong>Tycoon of the Month:</strong> The player with the most wins in the current month earns the 👑 Tycoon of the Month title, displayed at the top of the Champions Lounge.
+    </div>
+    <p>Access the Champions Lounge at any time using the <span class="badge badge-green">🏛️</span> button in the sidebar leaderboard section.</p>
+  </div>
+
+  <hr class="divider">
+  <p style="text-align:center; color:#2e7d32; font-size:13px; font-style:italic;">
+    Malik Sahab The Great &nbsp;·&nbsp; Lahore Edition &nbsp;·&nbsp; All rights reserved
+  </p>
+
+</div><!-- end .rulebook -->
+
+<a href="/" class="back-btn">🎮 Play Now</a>
+
+</body>
+</html>
