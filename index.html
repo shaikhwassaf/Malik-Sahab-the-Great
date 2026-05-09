@@ -17,7 +17,22 @@
                 --forest: #1b5e20; --board-bg: #e8f5e9; --board-mid: #2e7d32; --board-border: #1b5e20; }
         body { background: #061a06; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        #selection-screen { position: fixed; inset: 0; background: #1a0f0f; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #selection-screen {
+            position: fixed; inset: 0; z-index: 2000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: url('mtg-cover.png') center top / cover no-repeat;
+            overflow-y: auto;
+        }
+        #selection-screen::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom,
+                rgba(0,0,0,0.08) 0%,
+                rgba(6,26,6,0.18) 55%,
+                rgba(6,26,6,0.82) 100%);
+            z-index: 0;
+        }
+        #selection-screen > * { position: relative; z-index: 1; }
         .token-choice { font-size: 40px; padding: 20px; cursor: pointer; border: 2px solid transparent; border-radius: 10px; transition: 0.3s; text-align: center; }
         .token-choice:hover { border-color: var(--gold); background: #332b00; }
 
@@ -108,6 +123,43 @@
         .token { width: 30px; height: 30px; font-size: 24px; position: absolute; z-index: 100; transition: all 0.5s ease; pointer-events: none; }
         
         .modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: black; padding: 20px; border: 5px solid var(--maroon); z-index: 1000; text-align: center; display: none; width: 340px; border-radius: 15px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+
+        /* ── Rulebook Arrow Hint ─────────────────────────────── */
+        #rulebook-hint {
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            z-index: 5000;
+            display: none;
+            flex-direction: column;
+            align-items: flex-start;
+            pointer-events: none;
+            animation: hintBounce 1.2s ease-in-out infinite;
+        }
+        #rulebook-hint.visible { display: flex; }
+        .rb-hint-bubble {
+            background: #ffd700;
+            color: #000;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(255,215,0,0.5);
+            max-width: 170px;
+            line-height: 1.4;
+            pointer-events: all;
+            cursor: pointer;
+        }
+        .rb-hint-arrow {
+            font-size: 26px;
+            margin-top: 2px;
+            margin-left: 14px;
+            filter: drop-shadow(0 2px 6px rgba(255,215,0,0.6));
+        }
+        @keyframes hintBounce {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-8px); }
+        }
 
         /* ── Auction Timer ───────────────────────────────────── */
         #auc-timer-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 6px 0; }
@@ -267,7 +319,7 @@
         #player-name-input:focus { border-color: #ffea70; }
 
         /* ── Trade System ───────────────────────────────────── */
-        #trade-offer-modal, #trade-incoming-modal {
+        #trade-offer-modal, #trade-incoming-modal, #trade-pending-modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.88);
             z-index: 4000; display: none; align-items: flex-start;
             justify-content: center; padding-top: 40px; overflow-y: auto;
@@ -432,9 +484,7 @@
 <canvas id="confetti-canvas"></canvas>
 
 <div id="selection-screen">
-    <h1 style="color:#43a047;text-shadow:0 2px 12px rgba(0,180,0,0.5)">MALIK SAHAB THE GREAT</h1>
-    <p style="color:#888;font-size:13px;margin:4px 0 16px;">Choose how you want to play</p>
-    <div id="mode-buttons">
+    <div id="mode-buttons" style="margin-top:auto;">
         <button class="mode-btn" onclick="selectMode('local')">🏠 Same Device<br><small style="font-size:12px;color:#aaa;">Pass &amp; Play (2–5 players)</small></button>
         <button class="mode-btn" onclick="selectMode('online')">🌐 Online Multiplayer<br><small style="font-size:12px;color:#aaa;">Each on your own device</small></button>
     </div>
@@ -487,6 +537,15 @@
 <!-- My Turn Banner -->
 <div id="my-turn-banner">🎲 YOUR TURN!</div>
 
+<!-- Rulebook hint arrow -->
+<div id="rulebook-hint">
+    <div class="rb-hint-bubble" onclick="dismissRulebookHint()">
+        📖 New here? Learn the rules from the Rule Book!<br>
+        <span style="font-size:10px;font-weight:normal;opacity:0.7;">Tap to dismiss</span>
+    </div>
+    <div class="rb-hint-arrow">⬇️</div>
+</div>
+
 <!-- Mobile sidebar overlay + toggle -->
 <div id="sidebar-overlay" onclick="closeSidebar()"></div>
 <button id="sidebar-toggle" onclick="toggleSidebar()" aria-label="Open menu">☰</button>
@@ -532,6 +591,9 @@
         <div id="leaderboard-header">
             <h3>🏆 LEADERBOARD</h3>
             <div style="display:flex;gap:4px;">
+                <a id="rulebook-btn" href="/rulebook" target="_blank"
+                   style="background:#1a4a7a;font-size:10px;padding:3px 8px;margin:0;border-radius:6px;border:1px solid #2a6aaa;color:#90caf9;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer;"
+                   title="Open Rule Book">📖</a>
                 <button onclick="showChampionsLounge()" style="background:#1b5e20; font-size:10px; padding:3px 8px; margin:0;" title="Champions Lounge">🏛️</button>
                 <button onclick="showFinalStandings()" style="background:#333; font-size:10px; padding:3px 8px; margin:0;">End Game</button>
             </div>
@@ -662,6 +724,17 @@
         <div class="trade-btn-row">
             <button onclick="respondTrade(true)"  style="background:#1a6a1a;">✅ Accept</button>
             <button onclick="respondTrade(false)" style="background:#7f0000;">❌ Decline</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── TRADE PENDING MODAL (proposer waiting screen) ─────────── -->
+<div id="trade-pending-modal">
+    <div class="trade-card">
+        <h2>⏳ OFFER SENT</h2>
+        <div class="trade-summary" id="trade-pending-summary"></div>
+        <div class="trade-btn-row">
+            <button onclick="retractTradeOffer()" style="background:#7f0000;">↩️ Retract Offer</button>
         </div>
     </div>
 </div>
@@ -1152,10 +1225,22 @@ function connectSocket(cb) {
     gameSocket.on('chat-msg', (payload) => appendChatMsg(payload));
     gameSocket.on('trade-offer', (offer) => { if (!pendingIncomingTrade) showIncomingTrade(offer); });
     gameSocket.on('trade-response', ({ offer, accepted }) => {
-        if (!pendingIncomingTrade) {
-            if (accepted) { executeTrade(offer); logEvent(`✅ Trade: ${offer.fromName} ↔ ${offer.toName}`, false); }
-            else { logEvent(`❌ ${offer.toName} declined trade from ${offer.fromName}`, false); }
+        // Dismiss any pending modals on all screens
+        document.getElementById('trade-pending-modal').style.display = 'none';
+        pendingOutgoingTrade = null;
+        pendingIncomingTrade = null;
+        document.getElementById('trade-incoming-modal').style.display = 'none';
+        if (accepted) {
+            executeTrade(offer);
+            logEvent(`✅ Trade: ${offer.fromName} ↔ ${offer.toName}`, false);
+        } else {
+            logEvent(`❌ ${offer.toName} declined trade from ${offer.fromName}`, false);
         }
+    });
+    gameSocket.on('trade-cancelled', () => {
+        pendingIncomingTrade = null;
+        document.getElementById('trade-incoming-modal').style.display = 'none';
+        logEvent('↩️ The trade offer was retracted.', false);
     });
     gameSocket.on('player_left', () => logEvent('⚠️ A player disconnected.', false));
     gameSocket.on('player_disconnected', ({ socketId, name, icon }) => {
@@ -1253,6 +1338,7 @@ function startOnlineGameClient(lobbyPlayers) {
     updateUI();
     logEvent(`🌐 Game started! You are ${Game.players[Game.myPlayerIndex]?.icon} ${Game.players[Game.myPlayerIndex]?.name}. ${Game.players[0].icon} ${Game.players[0].name} goes first.`, false);
     showMyTurnBanner();
+    setTimeout(showRulebookHint, 1500);
 }
 
 function showMyTurnBanner() {
@@ -1298,7 +1384,8 @@ function broadcastGameState() {
             propIdx: Game.board.indexOf(Game.auction.prop),
             highBid: Game.auction.highBid,
             winner: Game.auction.winner,
-            isGovt: Game.auction.isGovt
+            isGovt: Game.auction.isGovt,
+            secondsLeft: auctionSecondsLeft
         } : { active: false }
     });
 }
@@ -1328,18 +1415,27 @@ function applyGameState(state) {
         tok.style.display = p.bankrupt ? 'none' : '';
         syncToken(p.id);
     });
-    // Sync auction modal for online observers
+    // Sync auction modal for online observers (non-host)
     if (state.auction && state.auction.active) {
         const prop = Game.board[state.auction.propIdx];
         if (prop && !Game.auction.active) {
             Game.auction = { active: true, prop, highBid: state.auction.highBid, winner: state.auction.winner, isGovt: state.auction.isGovt };
             _openAuctionModal(prop, state.auction.isGovt);
+            // Non-host: run a display-only countdown (no expire callback triggers game logic)
+            if (!Game.isHost && state.auction.secondsLeft > 0) {
+                startAuctionTimer(state.auction.secondsLeft, null);
+            }
         } else if (Game.auction.active) {
             Game.auction.highBid = state.auction.highBid;
             Game.auction.winner  = state.auction.winner;
             document.getElementById('auc-bid').innerText    = state.auction.highBid;
             const w = state.auction.winner !== null ? Game.players[state.auction.winner] : null;
             document.getElementById('auc-winner').innerText = w ? `${w.icon} ${w.name}` : '-';
+            // Sync timer display for non-host on each bid broadcast
+            if (!Game.isHost && state.auction.secondsLeft !== undefined) {
+                auctionSecondsLeft = state.auction.secondsLeft;
+                _renderAucTimer();
+            }
         }
     } else if (!state.auction?.active && Game.auction.active) {
         _closeAuctionModal();
@@ -1352,10 +1448,23 @@ function broadcastLog(txt) {
     if (Game.onlineMode && gameSocket && gameSocket.connected) gameSocket.emit('game_log', txt);
 }
 
+function showRulebookHint() {
+    if (localStorage.getItem('mtg_rulebook_hint_seen')) return;
+    const hint = document.getElementById('rulebook-hint');
+    if (hint) hint.classList.add('visible');
+    setTimeout(dismissRulebookHint, 12000);
+}
+function dismissRulebookHint() {
+    const hint = document.getElementById('rulebook-hint');
+    if (hint) hint.classList.remove('visible');
+    localStorage.setItem('mtg_rulebook_hint_seen', '1');
+}
+
 function startGame() {
     document.getElementById('selection-screen').style.display = 'none';
     initBoard();
     connectSocket(() => {});
+    setTimeout(showRulebookHint, 1500);
 }
 
 function handleRoll() {
@@ -1771,7 +1880,7 @@ function startAuctionTimer(seconds, onExpire) {
         _renderAucTimer();
         if (auctionSecondsLeft <= 0) {
             stopAuctionTimer();
-            onExpire();
+            if (onExpire) onExpire();
         }
     }, 1000);
 }
@@ -1865,6 +1974,7 @@ function placeBid(playerId) {
     document.getElementById('auc-bid').innerText    = amount;
     document.getElementById('auc-winner').innerText = `${pl.icon} ${pl.name}`;
     logEvent(`💰 ${pl.icon} ${pl.name} bids Rs.${amount}`);
+    broadcastGameState();
 }
 
 function _finalizeAuction() {
@@ -2692,6 +2802,7 @@ function checkPendingRejoin() {
 
 // ── MUTUAL TRADING SYSTEM ─────────────────────────────────────
 let pendingIncomingTrade = null;
+let pendingOutgoingTrade = null;
 
 function openTradeModal() {
     // In a local game, the proposer is always the current player
@@ -2744,6 +2855,28 @@ function closeTradeModal() {
     document.getElementById('trade-offer-modal').style.display = 'none';
 }
 
+function showTradePending(offer) {
+    pendingOutgoingTrade = offer;
+    const myList    = offer.myProps.length    ? offer.myProps.join(', ')    : '—';
+    const theirList = offer.theirProps.length ? offer.theirProps.join(', ') : '—';
+    document.getElementById('trade-pending-summary').innerHTML = `
+        <div>Waiting for <b>${offer.toName}</b> to respond…</div>
+        <hr style="border-color:#333;margin:8px 0">
+        <div>📤 You offered: <b>${myList}</b>${offer.myCash ? `  +Rs.${offer.myCash}` : ''}</div>
+        <div>📥 You wanted: <b>${theirList}</b>${offer.theirCash ? `  +Rs.${offer.theirCash}` : ''}</div>
+    `;
+    document.getElementById('trade-pending-modal').style.display = 'flex';
+}
+
+function retractTradeOffer() {
+    if (pendingOutgoingTrade && gameSocket) {
+        gameSocket.emit('trade-cancel', { fromId: pendingOutgoingTrade.fromId });
+    }
+    pendingOutgoingTrade = null;
+    document.getElementById('trade-pending-modal').style.display = 'none';
+    logEvent('↩️ Trade offer retracted.');
+}
+
 function sendTradeOffer() {
     const me   = Game.players[Game.myId];
     const sel  = document.getElementById('trade-target-select');
@@ -2768,12 +2901,18 @@ function sendTradeOffer() {
     };
 
     closeTradeModal();
-    logEvent(`🤝 ${me.icon} ${me.name} proposes a trade to ${them.icon} ${them.name} — pass the screen!`);
 
-    // For local pass-and-play: show the incoming modal directly so the other player can respond.
-    // The socket emit notifies any remote browsers (multi-device scenario).
     if (gameSocket) gameSocket.emit('trade-offer', offer);
-    showIncomingTrade(offer);
+
+    if (Game.onlineMode) {
+        // Online: show proposer a "waiting" panel — receiver responds on their own device
+        logEvent(`🤝 ${me.icon} ${me.name} proposes a trade to ${them.icon} ${them.name}`);
+        showTradePending(offer);
+    } else {
+        // Local pass-and-play: pass screen to receiver
+        logEvent(`🤝 ${me.icon} ${me.name} proposes a trade to ${them.icon} ${them.name} — pass the screen!`);
+        showIncomingTrade(offer);
+    }
 }
 
 function showIncomingTrade(offer) {
@@ -2799,13 +2938,21 @@ function respondTrade(accepted) {
     if (!pendingIncomingTrade) return;
     const offer = pendingIncomingTrade;
     pendingIncomingTrade = null;
-    gameSocket.emit('trade-response', { offer, accepted });
 
-    if (accepted) {
-        executeTrade(offer);
-        logEvent(`✅ Trade accepted between ${offer.fromName} and ${offer.toName}`);
+    if (Game.onlineMode && gameSocket) {
+        // Online: emit response — server broadcasts to ALL (including us),
+        // so everyone (proposer, receiver, bystanders) executes via the trade-response handler
+        gameSocket.emit('trade-response', { offer, accepted });
+        if (!accepted) logEvent(`❌ ${offer.toName} declined the trade offer from ${offer.fromName}`);
     } else {
-        logEvent(`❌ ${offer.toName} declined the trade offer from ${offer.fromName}`);
+        // Local pass-and-play: execute directly on same device
+        if (gameSocket) gameSocket.emit('trade-response', { offer, accepted });
+        if (accepted) {
+            executeTrade(offer);
+            logEvent(`✅ Trade accepted between ${offer.fromName} and ${offer.toName}`);
+        } else {
+            logEvent(`❌ ${offer.toName} declined the trade offer from ${offer.fromName}`);
+        }
     }
 }
 
